@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KIU SMC — Internship Placement Letters</title>
+<style>
+  :root{
+    --green:#0B8A3F; --green-dark:#076A30; --gold:#C9A227; --ink:#1E2A22;
+    --field:#F3F6F4; --line:#D5DDD8; --muted:#5F6D65; --err:#B4232C;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#EDF1EE;color:var(--ink);font:16px/1.5 "Times New Roman",Times,Georgia,serif;
+    -webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-touch-callout:none}
+  input,textarea,select{-webkit-user-select:text;-moz-user-select:text;-ms-user-select:text;user-select:text}
+  header.app{background:var(--green);color:#fff;padding:18px 24px;border-bottom:5px solid var(--gold)}
+  header.app h1{margin:0;font-size:20px;font-weight:600}
+  header.app p{margin:2px 0 0;font-size:13px;opacity:.9}
+  nav{display:flex;gap:6px;padding:14px 24px 0;flex-wrap:wrap}
+  nav button{border:1px solid var(--line);border-bottom:none;background:#E3EAE5;padding:9px 18px;border-radius:8px 8px 0 0;cursor:pointer;font:inherit;color:var(--muted)}
+  nav button.on{background:#fff;color:var(--green-dark);font-weight:600}
+  main{padding:0 24px 40px}
+  .panel{display:none;background:#fff;border:1px solid var(--line);border-radius:0 10px 10px 10px;padding:24px}
+  .panel.on{display:block}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px 20px}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}
+  input,select,textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:7px;background:var(--field);color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:1px;background:#fff}
+  .wide{grid-column:1/-1}
+  .hint{font-size:12px;color:var(--muted);margin-top:5px}
+  .flag{font-size:12px;color:#8a6d00;background:#FBF3D6;border:1px solid #E7D48A;border-radius:6px;padding:6px 9px;margin-top:6px;display:none}
+  .btn{font:inherit;padding:11px 20px;border-radius:8px;border:1px solid var(--green);background:var(--green);color:#fff;cursor:pointer;font-weight:600}
+  .btn.ghost{background:#fff;color:var(--green-dark)}
+  .btn.sm{padding:7px 13px;font-size:13px}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;align-items:center}
+  .note{font-size:13px;color:var(--muted)}
+  .banner{margin:0 0 16px;padding:10px 14px;border-radius:8px;font-size:13px;background:#FBF3D6;border:1px solid #E7D48A;color:#8a6d00;display:none}
+  .msg{margin-top:14px;padding:12px 14px;border-radius:8px;font-size:14px;display:none}
+  .msg.ok{display:block;background:#E6F4EC;border:1px solid #9BD1B0;color:var(--green-dark)}
+  .msg.bad{display:block;background:#FBE9EA;border:1px solid #E7A5A9;color:var(--err)}
+  .ref-big{font-family:"Courier New",monospace;font-size:19px;letter-spacing:1px;font-weight:700}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600}
+  dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 18px;margin:12px 0 0}
+  dt{color:var(--muted)} dd{margin:0}
+  .lock{max-width:360px;margin:10px auto 20px;text-align:center}
+  .lock .ic{font-size:30px}
+  .lock h3{margin:6px 0 4px;color:var(--green-dark)}
+  .lock p{margin:0 0 14px;font-size:13px;color:var(--muted)}
+  .lock .row{display:flex;gap:8px}
+  .grp{border:1px solid var(--line);border-radius:9px;margin-bottom:10px;overflow:hidden}
+  .grp-head{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#F3F6F4;border:none;padding:13px 16px;cursor:pointer;font:inherit;font-weight:600;color:var(--green-dark)}
+  .grp-head:hover{background:#ECF2EE}
+  .grp-head .chev{transition:transform .15s;color:var(--muted)}
+  .grp.open .grp-head .chev{transform:rotate(90deg)}
+  .grp-head .count{margin-left:auto;font-weight:600;font-size:12px;color:#fff;background:var(--green);border-radius:20px;padding:2px 10px}
+  .grp-body{display:none;padding:8px 16px 16px}
+  .grp.open .grp-body{display:block}
+  .grp-dl{display:flex;gap:8px;margin:12px 0 2px}
+  .spin{display:inline-block;width:15px;height:15px;border:2px solid #ffffff80;border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:7px}
+  .btn.ghost .spin{border:2px solid #0B8A3F55;border-top-color:var(--green)}
+  @keyframes sp{to{transform:rotate(360deg)}}
+
+  #letterWrap{display:none;margin-top:26px}
+  .sheet{width:210mm;min-height:297mm;margin:0 auto;background:#fff;color:#000;font-family:"Times New Roman",Times,serif;font-size:12pt;line-height:1.5;padding:15mm 20mm 16mm;position:relative;box-shadow:0 2px 14px rgba(0,0,0,.12)}
+  .logo{height:46px;width:auto;flex:none}
+  .lh{display:flex;gap:16px;align-items:center}
+  .math .lh .right{margin-left:auto;text-align:left}
+  .math .school{color:var(--green);font-weight:700;font-size:12.5pt}
+  .math .deptline{font-style:italic;font-size:11pt}
+  .math .addr{font-size:8.5pt;color:#333;line-height:1.35}
+  .rule-green{height:3px;background:var(--green);margin:8px 0 2px}
+  .rule-gold{height:1.5px;background:var(--gold);margin-bottom:12px}
+  .math .meta{display:flex;justify-content:space-between;font-weight:700;font-size:11pt;margin:6px 0 16px}
+  .it .lh .addr{margin-left:auto;text-align:center;font-size:8.5pt;color:#222;line-height:1.4}
+  .rule-black{height:2.5px;background:#000;margin:8px 0 10px}
+  .it .school{text-align:center;font-weight:700;font-style:italic;font-size:12.5pt;line-height:1.35;margin-bottom:14px}
+  .it .date{text-align:right;font-weight:700;font-size:11.5pt;margin-bottom:14px}
+  .it .href{font-style:italic;font-weight:700;font-size:11.5pt;margin-bottom:10px}
+  .to{margin:2px 0 12px;white-space:pre-line}
+  .subject{font-weight:700;text-decoration:underline;margin:12px 0 10px}
+  .it .subject{text-decoration:none}
+  .body p{margin:0 0 10px;text-align:justify}
+  .body ul{margin:0 0 10px 4px;padding-left:20px}
+  .body li{margin:0 0 3px;text-align:justify}
+  .pos{margin:0 0 10px}
+  .sig{margin-top:30px}
+  .sig .line{width:210px;border-bottom:1px solid #000;height:30px;margin-bottom:4px}
+  .sig .n{font-weight:700}
+  .foot{position:absolute;left:20mm;right:20mm;bottom:9mm}
+  .tag{text-align:center;font-style:italic;color:var(--green);font-size:9.5pt;border-top:1px solid var(--gold);padding-top:5px}
+  .auth{display:flex;justify-content:space-between;align-items:flex-end;font-size:8pt;color:#444;margin-top:4px}
+  .auth .code{font-family:"Courier New",monospace;font-size:11pt;font-weight:700;letter-spacing:1px;color:#000}
+
+  @media print{
+    @page{size:A4;margin:0}
+    body{background:#fff}
+    header.app,nav,.panel>*:not(#letterWrap),.no-print{display:none !important}
+    main{padding:0}
+    .panel{border:none;padding:0;border-radius:0}
+    #letterWrap{display:block !important;margin:0}
+    .sheet{box-shadow:none;margin:0;width:210mm;height:297mm}
+  }
+</style>
+</head>
+<body>
+<header class="app">
+  <h1>Internship placement letters — School of Mathematics and Computing</h1>
+  <p>Kampala International University · generate, print and authenticate placement letters</p>
+</header>
+
+<nav>
+  <button class="on" data-tab="gen">Get a letter</button>
+  <button data-tab="ver">Authenticate a letter</button>
+  <button data-tab="rec">Records</button>
+</nav>
+
+<main>
+<div id="cfgBanner" class="banner"></div>
+
+<!-- ===================== GENERATE ===================== -->
+<section id="gen" class="panel on">
+  <div class="grid">
+    <div><label for="fullName">Full name (as on registration)</label><input id="fullName" placeholder="e.g. Nakato Sarah Mary"></div>
+    <div><label for="regNo">Registration number</label><input id="regNo" placeholder="e.g. 2023/BIT/1234/K"><div class="hint">Each registration number may be used a maximum of three times.</div></div>
+    <div><label for="dept">Department</label><select id="dept"><option value="">Select department</option></select></div>
+    <div>
+      <label for="prog">Programme</label>
+      <select id="prog" disabled><option value="">Select department first</option></select>
+      <div class="flag" id="progFlag">Sample names — confirm the exact Mathematics &amp; Statistics programmes before issuing.</div>
+    </div>
+    <div><label for="level">Year of study</label><select id="level"></select></div>
+    <div><label for="period">Placement period</label><select id="period"></select><div class="hint" id="periodHint"></div></div>
+    <div class="wide"><label for="org">Placement obtained at (the organisation this letter is addressed "To")</label><input id="org" placeholder="e.g. Uganda Bureau of Statistics"></div>
+    <div class="wide"><label for="orgAddr">Addressee / address above the organisation name (optional — one line per row)</label><textarea id="orgAddr" rows="3" placeholder="The Human Resource Manager&#10;Plot 12, Nakawa Business Park"></textarea></div>
+  </div>
+  <div class="actions">
+    <button class="btn" id="btnGen">Generate letter</button>
+    <button class="btn ghost" id="btnPrint" disabled>Print / save as PDF</button>
+    <button class="btn ghost" id="btnNew" disabled>Start another</button>
+    <span class="note">Keep the authentication code at the foot — the letter counts only once you authenticate it.</span>
+  </div>
+  <div id="genMsg" class="msg"></div>
+  <div id="letterWrap"><div class="sheet" id="sheet"></div></div>
+</section>
+
+<!-- ===================== VERIFY ===================== -->
+<section id="ver" class="panel">
+  <div class="grid">
+    <div class="wide"><label for="vRef">Authentication code printed at the foot of the letter</label><input id="vRef" placeholder="SMC-IT-26-XXXXXX-XXXX" style="font-family:'Courier New',monospace;letter-spacing:1px"></div>
+  </div>
+  <div class="actions"><button class="btn" id="btnVer">Authenticate</button><span class="note">A valid code is confirmed and then filed into the official records.</span></div>
+  <div id="verMsg" class="msg"></div>
+  <dl id="verDetail" style="display:none"></dl>
+</section>
+
+<!-- ===================== RECORDS ===================== -->
+<section id="rec" class="panel">
+  <div class="lock" id="recLock">
+    <div class="ic">🔒</div>
+    <h3>Records are protected</h3>
+    <p>Enter the office password to view authenticated placement letters.</p>
+    <div class="row"><input id="recPass" type="password" placeholder="Password" autocomplete="off"><button class="btn" id="btnUnlock">Unlock</button></div>
+    <div id="recLockMsg" class="msg" style="text-align:left"></div>
+  </div>
+  <div id="recContent" style="display:none">
+    <div class="actions" style="margin-top:0">
+      <button class="btn ghost" id="btnRefresh">Refresh</button>
+      <label class="btn ghost" style="margin:0">Import JSON<input type="file" id="impJson" accept=".json" hidden></label>
+      <button class="btn ghost" id="btnJsonAll">Backup all (JSON)</button>
+      <button class="btn ghost" id="btnLock">Lock</button>
+      <input id="recSearch" placeholder="Search within departments" style="max-width:280px">
+    </div>
+    <p class="note">Only authenticated letters appear here, straight from Google Sheets. Click a department to view and download its letters.</p>
+    <div id="recGroups"></div>
+  </div>
+</section>
+</main>
+
+<script>
+const LOGO = "data:image/jpeg;base64,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";
+
+/* ===================== CONFIG — edit before deployment ===================== */
+const CONFIG = {
+  // 1) Paste the Apps Script Web App URL (ends in /exec) from the setup steps:
+  endpoint: "https://script.google.com/macros/s/AKfycbx6cA9Uj4SMLc644tFhP5DWcOQ9bV8yUY_kj-q13soFr_vdm6Dvihgfl1DO5m-AqcPl/exec",
+  // 2) This MUST be identical to the SECRET set inside the Apps Script Code.gs:
+  secret: "KIU-SMC-PLACEMENT-2026-CHANGE-ME",
+
+  levels: ["Second Year", "Third Year"],
+  periods: ["November 2026"],
+
+  departments: {
+    "Department of Information Technology": {
+      code: "IT", template: "short", bodyVariant: "it",
+      headerDept: "DEPARTMENT OF INFORMATION TECHNOLOGY",
+      defaultPeriod: "November 2026",
+      programmes: ["Bachelor of Information Technology (BIT)", "Bachelor of Library and Information Science (BLIS)"],
+      programmesConfirmed: true,
+      head: { name: "Dr. Shefiu O. Ganiyu", title: "H.O.D - IT", org: [] }
+    },
+    "Department of Computer Science": {
+      code: "CS", template: "short", bodyVariant: "cs",
+      headerDept: "DEPARTMENT OF COMPUTER SCIENCE",
+      defaultPeriod: "November 2026",
+      programmes: ["Bachelor of Computer Science (BCS)", "Diploma Computer Science (DCS)"],
+      programmesConfirmed: true,
+      head: { name: "Dr. Ramadhan B. Malinga", title: "H.O.D - CS", org: [] }
+    },
+    "Department of Mathematics and Statistics": {
+      code: "MS", template: "math",
+      defaultPeriod: "November 2026",
+      programmes: ["Bachelor of Science in Statistics", "Bachelor of Science in Mathematics"], // NOT in sample letter — replace
+      programmesConfirmed: false,
+      head: { name: "Dr. Hafez Ibrahim", title: "Head of Department",
+              org: ["Department of Mathematics and Statistics", "Kampala International University"] }
+    }
+  }
+};
+/* ========================================================================== */
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+const CONFIGURED = CONFIG.endpoint && CONFIG.endpoint.indexOf("PASTE_") === -1;
+if (!CONFIGURED){
+  const b = $("#cfgBanner"); b.style.display = "block";
+  b.innerHTML = "Backend not linked yet. Paste your Apps Script Web App URL into <b>CONFIG.endpoint</b> at the top of this file's script to connect Google Sheets.";
+}
+
+// ---- backend call (text/plain avoids the Apps Script CORS preflight) ----
+async function api(action, payload){
+  if (!CONFIGURED) throw new Error("not-configured");
+  const res = await fetch(CONFIG.endpoint, {
+    method: "POST", redirect: "follow",
+    headers: {"Content-Type": "text/plain;charset=utf-8"},
+    body: JSON.stringify(Object.assign({action}, payload))
+  });
+  const txt = await res.text();
+  let data; try { data = JSON.parse(txt); } catch(e){ throw new Error("bad-response"); }
+  if (data && data.error === "server") throw new Error(data.detail || "server");
+  return data;
+}
+function busy(btn, on, label){ btn.disabled = on;
+  btn.innerHTML = on ? `<span class="spin"></span>${label||"Working…"}` : btn.dataset.label; }
+
+// tabs
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("nav button,.panel").forEach(x => x.classList.remove("on"));
+  b.classList.add("on"); $("#" + b.dataset.tab).classList.add("on");
+});
+
+// dropdowns
+const deptSel = $("#dept"), progSel = $("#prog");
+Object.keys(CONFIG.departments).forEach(d => deptSel.add(new Option(d, d)));
+CONFIG.levels.forEach(l => $("#level").add(new Option(l, l)));
+CONFIG.periods.forEach(p => $("#period").add(new Option(p, p)));
+$("#period").value = CONFIG.periods[0];
+deptSel.onchange = () => {
+  const d = CONFIG.departments[deptSel.value];
+  progSel.innerHTML = ""; progSel.disabled = !d;
+  progSel.add(new Option(d ? "Select programme" : "Select department first", ""));
+  if (d) d.programmes.forEach(p => progSel.add(new Option(p, p)));
+  $("#progFlag").style.display = (d && !d.programmesConfirmed) ? "block" : "none";
+  if (d && d.defaultPeriod) $("#period").value = d.defaultPeriod;
+  $("#periodHint").textContent = (d && d.template === "math")
+    ? "Mathematics & Statistics letters ask for a period convenient to the host, so this window is recorded but not printed in the body."
+    : "";
+};
+
+// crypto (client makes the code; server re-validates the signature)
+async function sha(t){ const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2,"0")).join("").toUpperCase(); }
+function serial(){ const a = new Uint8Array(4); crypto.getRandomValues(a);
+  return [...a].map(b => b.toString(16).padStart(2,"0")).join("").toUpperCase().slice(0,6); }
+async function makeCode(dc){ const id = `SMC-${dc}-${String(new Date().getFullYear()).slice(-2)}-${serial()}`;
+  return id + "-" + (await sha(id + "|" + CONFIG.secret)).slice(0,4); }
+async function codeValid(code){ const m = /^(SMC-[A-Z]{2,}-\d{2}-[0-9A-F]{6})-([0-9A-F]{4})$/.exec(code.trim().toUpperCase());
+  return m ? (await sha(m[1] + "|" + CONFIG.secret)).slice(0,4) === m[2] : false; }
+const pad = n => String(n).padStart(2,"0");
+const ddmmyyyy = d => { const x = new Date(d); return `${pad(x.getDate())}/${pad(x.getMonth()+1)}/${x.getFullYear()}`; };
+const longDate = d => new Date(d).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+const say = (el,cls,html) => { el.className = "msg " + cls; el.innerHTML = html; };
+
+// letterheads / body
+const LOGO_IMG = `<img class="logo" src="${LOGO}" alt="Kampala International University">`;
+function mathHead(rec){ const d = new Date(rec.issued);
+  return `<div class="lh">${LOGO_IMG}
+    <div class="right"><div class="school">School of Mathematics and Computing</div>
+      <div class="deptline">Department of Mathematics and Statistics</div>
+      <div class="addr">Ggaba Road, Kansanga &bull; P.O. BOX 20000 Kampala, Uganda</div>
+      <div class="addr">Tel: +256704572770 / +256774808621</div>
+      <div class="addr">Fax: +256 (0) 41 - 501974 | www.kiu.ac.ug</div></div></div>
+    <div class="rule-green"></div><div class="rule-gold"></div>
+    <div class="meta"><span>Date: ${longDate(rec.issued)}</span><span>Ref: MS/${pad(d.getMonth()+1)}/${d.getFullYear()}</span></div>`; }
+function shortHead(rec, dept){ const d = new Date(rec.issued);
+  return `<div class="lh">${LOGO_IMG}
+    <div class="addr">Ggaba Road, Kansanga * PO BOX 20000 Kampala, Uganda<br>
+      Tel: +256704572770/+256774808621 &nbsp;Fax: +256 (0) 41 &ndash; 501974<br>
+      E-mail: dhdrinquiries@kiu.ac.ug * Website: http://www.kiu.ac.ug</div></div>
+    <div class="rule-black"></div>
+    <div class="school">SCHOOL OF MATHEMATICS AND COMPUTING<br>${esc(dept.headerDept)}</div>
+    <div class="date">Date: ${ddmmyyyy(rec.issued)}</div>
+    <div class="href">Our Ref/${dept.code}/${pad(d.getMonth()+1)}/${d.getFullYear()}</div>`; }
+function sigBlock(h){ return `<div class="sig"><div>Yours sincerely,</div><div class="line"></div>
+  <div class="n">${esc(h.name)}</div><div>${esc(h.title)}</div>${h.org.map(l=>`<div>${esc(l)}</div>`).join("")}</div>`; }
+const footBlock = c => `<div class="foot"><div class="tag">&ldquo;Exploring the Heights&rdquo;</div>
+  <div class="auth"><span>Authentication code &mdash; quote to the Department to confirm this letter</span>
+  <span class="code">${c}</span></div></div>`;
+function renderLetter(rec){
+  const dept = CONFIG.departments[rec.dept], head = dept.head;
+  const toBlock = `<div class="to">To:\n${esc(rec.orgAddr ? rec.orgAddr + "\n" : "")}${esc(rec.org)}</div>`;
+  if (dept.template === "short"){
+    const head2 = shortHead(rec, dept);
+    if (dept.bodyVariant === "cs"){
+      const yr = rec.level.charAt(0) + rec.level.slice(1).toLowerCase();   // "Second year" / "Third year"
+      return head2 + toBlock +
+        `<p>Dear Sir/Madam,</p><div class="subject">SUBJECT: APPLICATION FOR INTERNSHIP PLACEMENT</div>
+         <div class="body"><p>This is to introduce to you Mr/Ms <b>${esc(rec.name)}</b></p>
+         <p>Reg No: <b>${esc(rec.reg)}</b> who is a <b>${yr}</b> student of ${esc(rec.prog)}.</p>
+         <p>The purpose of this letter is to kindly request you to grant him/her a place for internship training in your organization for the period of <b>${esc(rec.period)}</b>. During this time he/she is expected to abide by the rules and regulations of the organization. This will help him/her get acquainted with the apprenticeship of the required skills.</p>
+         <p>We appreciate all the assistance given and we shall be grateful if a letter of confirmation to this effect is availed.</p>
+         <p>We are always thankful for your cooperation.</p></div>` + sigBlock(head) + footBlock(rec.ref);
+    }
+    const word = rec.level.toLowerCase().replace(/\s+/g,"-");              // "second-year" / "third-year"
+    return head2 + toBlock +
+      `<p>Dear Sir/Madam,</p><div class="subject">SUBJECT: APPLICATION FOR INTERNSHIP PLACEMENT</div>
+       <div class="body"><p>This is to introduce to you</p><p>Mr/Ms <b>${esc(rec.name)}</b></p>
+       <p>Reg No: <b>${esc(rec.reg)}</b> who is a <b>${word}</b> student of ${esc(rec.prog)}.</p>
+       <p>The purpose of this letter is to kindly request you to grant him/her a place for internship training in your organisation for the period of <b>${esc(rec.period)}</b>. During this time, he/she is expected to abide by the organisation's rules and regulations. This will help him/her get acquainted with the apprenticeship and the required skills.</p>
+       <p>We appreciate all the assistance provided and would be grateful if a letter confirming this could be provided.</p>
+       <p>We are always thankful for your cooperation.</p></div>` + sigBlock(head) + footBlock(rec.ref);
+  }
+  return mathHead(rec) + toBlock +
+    `<div class="subject">RE: APPLICATION FOR INTERNSHIP / FIELD ATTACHMENT PLACEMENT</div><p>Dear Sir/Madam,</p>
+     <div class="body">
+     <p>This letter serves to introduce <b>Mr./Ms. ${esc(rec.name)}</b>, Registration No. <b>${esc(rec.reg)}</b>, a bona fide student of Kampala International University in the Department of Mathematics and Statistics, School of Mathematics and Computing.</p>
+     <p class="pos"><b>Programme of Study:</b> ${esc(rec.prog)}&nbsp;&nbsp;&nbsp;&nbsp;<b>Year of Study:</b> ${esc(rec.level)}</p>
+     <p>Internship training is a mandatory and assessed component of our degree programmes, intended to give the student supervised exposure to a professional working environment. Our students follow a quantitative curriculum, and organizations that have hosted them have found them useful in work such as:</p>
+     <ul><li>records and database work, including data entry, cleaning and verification;</li>
+     <li>routine statistical analysis, survey work, and the preparation of data-based reports;</li>
+     <li>modelling and forecasting in support of planning, monitoring and evaluation;</li>
+     <li>computational tasks using Excel, SPSS, STATA, R, Python or MATLAB.</li></ul>
+     <p>The above is offered only as a guide, and not as a requirement. We therefore kindly request you to grant the above-named student a placement for a training period convenient to you, in whichever section best suits your current needs. The student undertakes to observe the rules, regulations, working hours and confidentiality requirements of your organization throughout the attachment.</p>
+     <p>We shall be grateful if the student is assigned a field supervisor to allocate duties, guide the training, and complete the assessment form the student will present at the end of the placement. A brief letter confirming the placement, addressed to the undersigned, would also be appreciated.</p>
+     <p>The Department remains available for any clarification, and we thank you for your support in the training of our students.</p>
+     </div>` + sigBlock(head) + footBlock(rec.ref);
+}
+
+// generate -> server enforces the 3-use lock and stores as pending
+$("#btnGen").dataset.label = "Generate letter";
+$("#btnGen").onclick = async () => {
+  const f = { name:$("#fullName").value.trim(), reg:$("#regNo").value.trim(), dept:deptSel.value,
+    prog:progSel.value, level:$("#level").value, period:$("#period").value,
+    org:$("#org").value.trim(), orgAddr:$("#orgAddr").value.trim() };
+  const need = {name:"full name",reg:"registration number",dept:"department",prog:"programme",level:"year of study",org:"placement organisation"};
+  const missing = Object.entries(need).filter(([k]) => !f[k]).map(([,v]) => v);
+  if (missing.length) return say($("#genMsg"),"bad","Fill in: " + missing.join(", ") + ".");
+  if (!CONFIGURED) return say($("#genMsg"),"bad","Backend not linked. Set CONFIG.endpoint first.");
+
+  const dept = CONFIG.departments[f.dept];
+  const code = await makeCode(dept.code), issued = new Date().toISOString();
+  const rec = { ref:code, issued, status:"pending", ...f };
+
+  busy($("#btnGen"), true, "Saving…");
+  try {
+    const r = await api("issue", {rec});
+    if (!r.ok && r.error === "limit"){
+      $("#letterWrap").style.display = "none"; $("#btnPrint").disabled = $("#btnNew").disabled = true;
+      return say($("#genMsg"),"bad",`Registration number <b>${esc(f.reg)}</b> has already been used ${r.max} times. No further letters can be generated for it.`);
+    }
+    if (!r.ok) return say($("#genMsg"),"bad","Could not save: " + (r.error || "unknown error") + ".");
+    $("#sheet").className = "sheet " + (dept.template === "math" ? "math" : "it");
+    $("#sheet").innerHTML = renderLetter(rec);
+    $("#letterWrap").style.display = "block";
+    $("#btnPrint").disabled = $("#btnNew").disabled = false;
+    say($("#genMsg"),"ok",`Letter prepared (use ${r.used} of ${r.max} for ${esc(f.reg)}). Authentication code: <span class="ref-big">${code}</span>. It is <b>not yet in the records</b> — enter this code on the <b>Authenticate a letter</b> tab to file it officially AFTER SIGNING AND STAMPING.`);
+    $("#letterWrap").scrollIntoView({behavior:"smooth"});
+  } catch(e){ say($("#genMsg"),"bad","Could not reach the backend. Check your connection and the endpoint URL."); }
+  finally { busy($("#btnGen"), false); }
+};
+$("#btnPrint").onclick = () => window.print();
+$("#btnNew").onclick = () => {
+  ["fullName","regNo","org","orgAddr"].forEach(i => $("#"+i).value = "");
+  deptSel.value = ""; deptSel.onchange(); $("#level").value = ""; $("#period").value = CONFIG.periods[0];
+  $("#letterWrap").style.display = "none"; $("#genMsg").className = "msg";
+  $("#btnPrint").disabled = $("#btnNew").disabled = true; window.scrollTo({top:0,behavior:"smooth"});
+};
+
+// authenticate -> server promotes pending to records
+$("#btnVer").dataset.label = "Authenticate";
+$("#btnVer").onclick = async () => {
+  const code = $("#vRef").value.trim().toUpperCase(), d = $("#verDetail"); d.style.display = "none";
+  if (!code) return say($("#verMsg"),"bad","Enter the authentication code printed at the foot of the letter.");
+  if (!(await codeValid(code))) return say($("#verMsg"),"bad",`<b>Not authentic.</b> ${esc(code)} was not issued by this system, or has been altered.`);
+  if (!CONFIGURED) return say($("#verMsg"),"bad","Backend not linked. Set CONFIG.endpoint first.");
+
+  busy($("#btnVer"), true, "Checking…");
+  try {
+    const r = await api("authenticate", {ref:code});
+    if (r.status === "invalid") return say($("#verMsg"),"bad",`<b>Not authentic.</b> ${esc(code)} failed the signature check.`);
+    if (r.status === "notfound") return say($("#verMsg"),"ok",`<b>Signature valid.</b> ${esc(code)} carries a genuine School signature, but no matching pending letter was found on the server.`);
+    say($("#verMsg"),"ok", r.status === "new"
+        ? `<b>Authentic.</b> ${esc(code)} is confirmed and has now been filed into the official records.`
+        : `<b>Authentic.</b> ${esc(code)} was already authenticated on ${longDate(r.rec.authenticatedAt || r.rec.issued)}.`);
+    const rec = r.rec;
+    d.innerHTML = [["Student",rec.name],["Registration no",rec.reg],["Department",rec.dept],["Programme",rec.prog],
+      ["Year of study",rec.level],["Placement at",rec.org],["Period",rec.period]]
+      .map(([k,v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("");
+    d.style.display = "grid";
+  } catch(e){ say($("#verMsg"),"bad","Could not reach the backend. Check your connection and the endpoint URL."); }
+  finally { busy($("#btnVer"), false); }
+};
+
+// ---- records: server-checked password + department accordion ----
+const openDepts = new Set();
+let recCache = [], recPass = "";
+$("#btnUnlock").dataset.label = "Unlock";
+$("#btnUnlock").onclick = async () => {
+  const pw = $("#recPass").value;
+  if (!pw) return;
+  if (!CONFIGURED) return say($("#recLockMsg"),"bad","Backend not linked. Set CONFIG.endpoint first.");
+  busy($("#btnUnlock"), true, "Unlocking…");
+  try {
+    const r = await api("records", {password: pw});
+    if (!r.ok){ say($("#recLockMsg"),"bad", r.error === "auth" ? "Incorrect password." : "Could not load records."); return; }
+    recPass = pw; recCache = r.records || [];
+    $("#recPass").value = ""; $("#recLockMsg").className = "msg";
+    $("#recLock").style.display = "none"; $("#recContent").style.display = "block";
+    renderRecords();
+  } catch(e){ say($("#recLockMsg"),"bad","Could not reach the backend."); }
+  finally { busy($("#btnUnlock"), false); }
+};
+$("#recPass").addEventListener("keydown", e => { if (e.key === "Enter") $("#btnUnlock").click(); });
+$("#btnLock").onclick = () => { recCache = []; recPass = "";
+  $("#recContent").style.display = "none"; $("#recLock").style.display = "block"; };
+
+$("#btnRefresh").dataset.label = "Refresh";
+$("#btnRefresh").onclick = async () => {
+  busy($("#btnRefresh"), true, "Refreshing…");
+  try { const r = await api("records", {password: recPass}); if (r.ok){ recCache = r.records || []; renderRecords(); } }
+  catch(e){ alert("Could not refresh from the server."); }
+  finally { busy($("#btnRefresh"), false); }
+};
+
+function deptRecords(deptName){ return recCache.filter(r => r.dept === deptName); }
+function rowHtml(r){
+  return `<tr><td style="font-family:'Courier New',monospace">${esc(r.ref)}</td><td>${esc(r.name)}</td>
+    <td>${esc(r.reg)}</td><td>${esc(r.prog)}</td><td>${esc(r.level)}</td><td>${esc(r.org)}</td>
+    <td>${longDate(r.authenticatedAt || r.issued)}</td></tr>`;
+}
+function renderRecords(){
+  const q = $("#recSearch").value.trim().toLowerCase();
+  const order = Object.keys(CONFIG.departments);
+  recCache.forEach(r => { if (!order.includes(r.dept)) order.push(r.dept); });
+  $("#recGroups").innerHTML = order.map(dept => {
+    const list = deptRecords(dept);
+    const shown = list.filter(r => !q || [r.name,r.reg,r.org,r.ref].join(" ").toLowerCase().includes(q)).reverse();
+    if (q && !shown.length) return "";
+    const open = openDepts.has(dept) ? " open" : "";
+    const body = shown.length
+      ? `<table><thead><tr><th>Code</th><th>Student</th><th>Reg no</th><th>Programme</th><th>Year</th><th>Placement at</th><th>Authenticated</th></tr></thead><tbody>${shown.map(rowHtml).join("")}</tbody></table>`
+      : `<p class="note">No authenticated letters in this department yet.</p>`;
+    const dl = list.length ? `<div class="grp-dl">
+        <button class="btn ghost sm dl" data-dept="${esc(dept)}" data-fmt="csv">Download CSV</button>
+        <button class="btn ghost sm dl" data-dept="${esc(dept)}" data-fmt="json">Download JSON</button></div>` : "";
+    return `<div class="grp${open}" data-dept="${esc(dept)}">
+        <button class="grp-head"><span class="chev">▶</span>${esc(dept)}<span class="count">${list.length}</span></button>
+        <div class="grp-body">${dl}${body}</div></div>`;
+  }).join("") || `<p class="note">No authenticated letters yet.</p>`;
+}
+$("#recSearch").oninput = renderRecords;
+$("#recGroups").addEventListener("click", e => {
+  const head = e.target.closest(".grp-head");
+  if (head){ const dept = head.parentElement.dataset.dept;
+    openDepts.has(dept) ? openDepts.delete(dept) : openDepts.add(dept);
+    head.parentElement.classList.toggle("open"); return; }
+  const dl = e.target.closest(".dl");
+  if (dl) downloadDept(dl.dataset.dept, dl.dataset.fmt);
+});
+function download(name,text,type){ const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text],{type})); a.download = name; a.click(); }
+function slug(s){ return s.replace(/[^A-Za-z0-9]+/g,"-").replace(/^-|-$/g,""); }
+function downloadDept(dept, fmt){
+  const list = deptRecords(dept);
+  const code = CONFIG.departments[dept]?.code || slug(dept);
+  if (fmt === "json") return download(`placement-${code}.json`, JSON.stringify(list, null, 2), "application/json");
+  const cols = ["ref","issued","authenticatedAt","name","reg","dept","prog","level","period","org"];
+  const csv = [cols.join(",")].concat(list.map(r => cols.map(c => `"${String(r[c]||"").replace(/"/g,'""')}"`).join(","))).join("\n");
+  download(`placement-${code}.csv`, csv, "text/csv");
+}
+$("#btnJsonAll").onclick = () => download("placement-records-backup.json", JSON.stringify(recCache, null, 2), "application/json");
+$("#impJson").onchange = e => {
+  const file = e.target.files[0]; if (!file) return;
+  file.text().then(async t => {
+    let incoming; try { incoming = JSON.parse(t); } catch(_){ return alert("That file is not a valid records backup."); }
+    try { const r = await api("import", {password: recPass, records: incoming});
+      if (!r.ok) return alert("Import failed: " + (r.error || "unknown"));
+      const rr = await api("records", {password: recPass}); if (rr.ok) recCache = rr.records || [];
+      renderRecords(); alert(`${r.added} new record(s) imported.`);
+    } catch(err){ alert("Could not reach the backend to import."); }
+  });
+  e.target.value = "";
+};
+</script>
+
+<script>
+/* ---- casual access deterrents (client-side only; not real security) ---- */
+(function(){
+  var inField = t => t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA");
+  var stop = e => { e.preventDefault(); e.stopPropagation(); return false; };
+
+  document.addEventListener("contextmenu", stop);          // right-click menu
+  document.addEventListener("dragstart", stop);            // drag images/text out
+  document.addEventListener("selectstart", e => { if (!inField(e.target)) stop(e); });
+  ["copy","cut"].forEach(ev => document.addEventListener(ev, e => { if (!inField(e.target)) stop(e); }));
+
+  document.addEventListener("keydown", function(e){
+    var k = (e.key || "").toLowerCase();
+    if (e.key === "F12") return stop(e);                                   // DevTools
+    if ((e.ctrlKey||e.metaKey) && e.shiftKey && (k==="i"||k==="j"||k==="c")) return stop(e); // DevTools
+    if ((e.ctrlKey||e.metaKey) && (k==="u"||k==="s")) return stop(e);      // view-source / save page
+    if ((e.ctrlKey||e.metaKey) && (k==="c"||k==="x") && !inField(e.target)) return stop(e);  // copy/cut
+    // Ctrl+P is intentionally left alone so letters can still be printed / saved as PDF.
+  });
+})();
+</script>
+</body>
+</html>

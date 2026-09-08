@@ -36,6 +36,9 @@
   .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;align-items:center}
   .note{font-size:13px;color:var(--muted)}
   .banner{margin:0 0 16px;padding:10px 14px;border-radius:8px;font-size:13px;background:#FBF3D6;border:1px solid #E7D48A;color:#8a6d00;display:none}
+  .notice{margin:0 0 18px;padding:13px 15px;border-radius:8px;font-size:14px;line-height:1.45;background:#FBF3D6;border:1px solid #E7D48A;color:#8a6d00;display:flex;gap:10px;align-items:flex-start}
+  .notice .ic{font-size:18px;line-height:1.2}
+  .notice b{color:#6d5600}
   .msg{margin-top:14px;padding:12px 14px;border-radius:8px;font-size:14px;display:none}
   .msg.ok{display:block;background:#E6F4EC;border:1px solid #9BD1B0;color:var(--green-dark)}
   .msg.bad{display:block;background:#FBE9EA;border:1px solid #E7A5A9;color:var(--err)}
@@ -124,7 +127,7 @@
 <section id="gen" class="panel on">
   <div class="grid">
     <div><label for="fullName">Full name (as on registration)</label><input id="fullName" placeholder="e.g. Nakato Sarah Mary"></div>
-    <div><label for="regNo">Registration number</label><input id="regNo" placeholder="e.g. 2023/BIT/1234/K"><div class="hint">Each registration number may be used a maximum of three times.</div></div>
+    <div><label for="regNo">Registration number</label><input id="regNo" placeholder="e.g. 2023/BIT/1234/K"><div class="hint">Each registration number may be used a maximum of ten times.</div></div>
     <div><label for="dept">Department</label><select id="dept"><option value="">Select department</option></select></div>
     <div>
       <label for="prog">Programme</label>
@@ -148,6 +151,7 @@
 
 <!-- ===================== VERIFY ===================== -->
 <section id="ver" class="panel">
+  <div class="notice"><span class="ic">⚠</span><span><b>Before you authenticate:</b> you must already have been accepted for the internship placement by the organisation. Only authenticate this letter once your placement has been confirmed — authentication files it into the School's official records.</span></div>
   <div class="grid">
     <div class="wide"><label for="vRef">Authentication code printed at the foot of the letter</label><input id="vRef" placeholder="SMC-IT-26-XXXXXX-XXXX" style="font-family:'Courier New',monospace;letter-spacing:1px"></div>
   </div>
@@ -376,7 +380,7 @@ $("#btnGen").onclick = async () => {
     $("#sheet").innerHTML = renderLetter(rec);
     $("#letterWrap").style.display = "block";
     $("#btnPrint").disabled = $("#btnNew").disabled = false;
-    say($("#genMsg"),"ok",`Letter prepared (use ${r.used} of ${r.max} for ${esc(f.reg)}). Authentication code: <span class="ref-big">${code}</span>. It is <b>not yet in the records</b> — enter this code on the <b>Authenticate a letter</b> tab to file it officially AFTER HAVING A PLACEMENT.`);
+    say($("#genMsg"),"ok",`Letter prepared (use ${r.used} of ${r.max} for ${esc(f.reg)}). Authentication code: <span class="ref-big">${code}</span>. It is <b>not yet in the records</b> — enter this code on the <b>Authenticate a letter</b> tab to file it officially AFTER SIGNING AND STAMPING.`);
     $("#letterWrap").scrollIntoView({behavior:"smooth"});
   } catch(e){ say($("#genMsg"),"bad","Could not reach the backend. Check your connection and the endpoint URL."); }
   finally { busy($("#btnGen"), false); }

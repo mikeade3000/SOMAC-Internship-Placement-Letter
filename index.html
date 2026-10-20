@@ -127,7 +127,7 @@
 <section id="gen" class="panel on">
   <div class="grid">
     <div><label for="fullName">Full name (as on registration)</label><input id="fullName" placeholder="e.g. Nakato Sarah Mary"></div>
-    <div><label for="regNo">Registration number</label><input id="regNo" placeholder="e.g. 2023/BIT/1234/K"><div class="hint">Each registration number may be used a maximum of ten times.</div></div>
+    <div><label for="regNo">Registration number</label><input id="regNo" placeholder="e.g. 2024-08-12345"><div class="hint">Each registration number may be used a maximum of ten times.</div></div>
     <div><label for="dept">Department</label><select id="dept"><option value="">Select department</option></select></div>
     <div>
       <label for="prog">Programme</label>
@@ -194,28 +194,28 @@ const CONFIG = {
   secret: "KIU-SMC-PLACEMENT-2026-CHANGE-ME",
 
   levels: ["Second Year", "Third Year"],
-  periods: ["November and December 2026"],
+  periods: ["November/December 2026"],
 
   departments: {
     "Department of Information Technology": {
       code: "IT", template: "short", bodyVariant: "it",
       headerDept: "DEPARTMENT OF INFORMATION TECHNOLOGY",
-      defaultPeriod: "November and December 2026",
-      programmes: ["Bachelor of Information Technology (BIT)", "Bachelor of Library and Information Science (BLIS)"],
+      defaultPeriod: "November/December 2026",
+      programmes: ["Bachelor of Information Technology (BIT)", "Diploma in Information Technology (DIT)", "Bachelor of Library and Information Science (BLIS)"],
       programmesConfirmed: true,
       head: { name: "Dr. Shefiu O. Ganiyu", title: "H.O.D - IT", org: [] }
     },
     "Department of Computer Science": {
       code: "CS", template: "short", bodyVariant: "cs",
       headerDept: "DEPARTMENT OF COMPUTER SCIENCE",
-      defaultPeriod: "November and December 2026",
-      programmes: ["Bachelor of Computer Science (BCS)", "Diploma Computer Science (DCS)"],
+      defaultPeriod: "November/December 2026",
+      programmes: ["Bachelor of Computer Science (BCS)", "Diploma in Computer Science (DCS)"],
       programmesConfirmed: true,
       head: { name: "Dr. Ramadhan B. Malinga", title: "H.O.D - CS", org: [] }
     },
     "Department of Mathematics and Statistics": {
       code: "MS", template: "math",
-      defaultPeriod: "November and December 2026",
+      defaultPeriod: "November/December 2026",
       programmes: ["Bachelor of Science in Statistics", "Bachelor of Science in Mathematics"], // NOT in sample letter — replace
       programmesConfirmed: false,
       head: { name: "Dr. Hafez Ibrahim", title: "Head of Department",
